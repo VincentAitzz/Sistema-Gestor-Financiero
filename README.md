@@ -31,6 +31,7 @@ El proyecto se fundamenta en principios de ciberseguridad aplicada y buenas prá
 
 ---
 # **Desarrollado por Vicente Pavez (Aitzz)**
-
+<p align="center">
 <img src="docs/img/Aitzz_logo.png" alt="Sello Personal" width="300" />
+</p>
 <br>
