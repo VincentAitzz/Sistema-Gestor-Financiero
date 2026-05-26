@@ -1,6 +1,8 @@
 import Fastify from 'fastify';
-import prismaPlugin from './plugins/prisma.js';
+import prismaPlugin from './shared/plugins/prisma.js';
 import * as dotenv from 'dotenv';
+import { authRoutes } from './modules/auth/auth.routes.js';
+import cors from '@fastify/cors';
 
 // Cargar variables de entorno antes de cualquier otra cosa
 dotenv.config();
@@ -21,6 +23,10 @@ const fastify = Fastify({
 // --- Registro de Plugins ---
 // Registramos Prisma primero para que esté disponible en toda la app
 await fastify.register(prismaPlugin);
+await fastify.register(authRoutes, { prefix: '/auth' });
+await fastify.register(cors, { 
+  origin: true // Permite peticiones desde cualquier origen (emuladores/celulares)
+});
 
 // --- Rutas Base de Infraestructura ---
 fastify.get('/health', async (request, reply) => {
