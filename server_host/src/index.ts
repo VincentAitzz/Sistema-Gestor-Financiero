@@ -1,17 +1,24 @@
 import Fastify from 'fastify';
+import prismaPlugin from './plugins/prisma.js';
 
-const fastify = Fastify({
-  logger: true // Activa logs automáticos en consola estilo profesional
-});
+const fastify = Fastify({ logger: true });
+
+// Registramos el plugin de Prisma
+fastify.register(prismaPlugin);
 
 fastify.get('/health', async () => {
-  return { status: 'OK', service: 'Exclusive Host' };
+  // Verificamos si podemos contar los usuarios (prueba de conexión real)
+  const userCount = await fastify.prisma.user.count();
+  return { 
+    status: 'OK', 
+    service: 'Exclusive Host',
+    db_connected: true,
+    users_in_db: userCount
+  };
 });
 
 const start = async () => {
   try {
-    // Escuchamos en el puerto 3000 y en todas las interfaces de red (0.0.0.0)
-    // Esto es CRÍTICO para que el celular Android pueda conectarse al notebook
     await fastify.listen({ port: 3000, host: '0.0.0.0' });
     console.log('Servidor Exclusive operativo en el puerto 3000');
   } catch (err) {
