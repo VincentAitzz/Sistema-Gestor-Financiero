@@ -1,9 +1,6 @@
-```typescript
-/*
- * Copyright (c) 2026 Vicente Pavez (Aitzz)
- * Licensed under the MIT License.
- */
-```
+<img src="img/Aitzz_logo.png" alt="Sello Personal" width="120" />
+<br>
+
 # Diagrama ER — Modelo de Base de Datos
 
 Este archivo contiene un diagrama ER en formato Mermaid pensado para documentación profesional. Incluye las entidades principales, sus campos y relaciones.

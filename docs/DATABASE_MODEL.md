@@ -1,9 +1,6 @@
-```typescript
-/*
- * Copyright (c) 2026 Vicente Pavez (Aitzz)
- * Licensed under the MIT License.
- */
-```
+<img src="img/Aitzz_logo.png" alt="Sello Personal" width="120" />
+<br>
+
 # Nomenclatura — Modelo de Base de Datos
 
 ## _Convenciones generales_
