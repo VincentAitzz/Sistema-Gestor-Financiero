@@ -18,8 +18,12 @@ Este archivo contiene un diagrama ER en formato Mermaid pensado para documentaci
 erDiagram
     USERS {
         UUID id PK
-        VARCHAR username
-        TEXT password_hash
+        VARCHAR email "Unique"
+        VARCHAR username "Unique / Nullable"
+        TEXT password_hash "Nullable"
+        VARCHAR google_id "Unique / Nullable"
+        VARCHAR auth_provider "local | google"
+        TEXT avatar_url
         TIMESTAMP created_at
     }
     DEVICES {
@@ -39,7 +43,7 @@ erDiagram
         TIMESTAMP updated_at
     }
     TRANSACTIONS {
-        UUID id PK "Generado en cliente"
+        UUID id PK "Generado en dispositivo"
         UUID user_id FK
         UUID category_id FK
         DECIMAL amount

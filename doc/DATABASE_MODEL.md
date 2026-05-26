@@ -20,9 +20,13 @@
 | Campo | Tipo | Restricciones / Notas |
 |---|---|---|
 | id | UUID | Primary Key |
-| username | VARCHAR(50) | Único |
-| password_hash | TEXT | Hash seguro (Argon2id) |
-| created_at | TIMESTAMP | Fecha de creación (UTC) |
+| email | VARCHAR(255) | Único / Obligatorio (Clave para vincular identidades) |
+| username | VARCHAR(50) | Único / Nullable (Opcional si se usa Google) |
+| password_hash | TEXT | Nullable (Vacío si el usuario solo usa Google) |
+| google_id | VARCHAR(255) | Único / Nullable (ID proveído por Google) |
+| auth_provider | VARCHAR(20) | Valores: local, google |
+| avatar_url | TEXT | URL de la imagen de perfil de Google |
+| created_at | TIMESTAMP | Fecha de registro |
 
 ## Tabla: devices
 

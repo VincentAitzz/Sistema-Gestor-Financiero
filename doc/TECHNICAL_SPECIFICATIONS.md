@@ -28,3 +28,9 @@ El proyecto incluye un script de despliegue inicial que automatiza las siguiente
 * **ACID (Atomicity, Consistency, Isolation, Durability):** Conjunto de propiedades que garantizan que las transacciones en la base de datos se procesen de manera fiable.
 * **Docker Container:** Unidad de software estándar que empaqueta el código y todas sus dependencias para que la aplicación se ejecute de forma rápida y confiable en cualquier entorno.
 * **mDNS (Multicast DNS):** Protocolo que utiliza paquetes UDP para resolver nombres de host en direcciones IP dentro de redes locales sin un servidor DNS dedicado.
+
+## Gestión de Identidad Federada
+El sistema utiliza un modelo de Identidad Federada mediante OAuth 2.0 (Google Auth).
+
+* **Persistencia:** La cuenta del usuario está ligada a su correo electrónico verificado. Esto permite la recuperación de datos en el Host independientemente del estado del dispositivo móvil.
+* **Seguridad:** Para cuentas de Google, el servidor valida el ID Token mediante las librerías oficiales de Google, emitiendo un JWT propio de corta duración para las sesiones de sincronización.
