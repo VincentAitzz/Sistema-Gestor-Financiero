@@ -1,0 +1,67 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String        @id @default(uuid()) @db.Uuid
+  email        String        @unique
+  username     String?       @unique
+  passwordHash String?       @map("password_hash")
+  googleId     String?       @unique @map("google_id")
+  authProvider String        @default("local") @map("auth_provider")
+  avatarUrl    String?       @map("avatar_url")
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamp
+
+  devices      Device[]
+  categories   Category[]
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model Device {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  deviceName String   @map("device_name")
+  tokenHash  String   @map("token_hash")
+  lastSync   DateTime @default(now()) @map("last_sync") @db.Timestamp
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("devices")
+}
+
+model Category {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  name      String   @db.VarChar(50)
+  iconData  String   @map("icon_data")
+  colorHex  String   @map("color_hex") @db.VarChar(7)
+  isDeleted Boolean  @default(false) @map("is_deleted")
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("categories")
+}
+
+model Transaction {
+  id          String   @id @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  categoryId  String?  @map("category_id") @db.Uuid
+  amount      Decimal  @db.Decimal(12, 2)
+  description String   @db.Text
+  date        DateTime @db.Timestamp
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamp
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@map("transactions")
+}
