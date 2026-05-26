@@ -1,26 +1,66 @@
 import Fastify from 'fastify';
 import prismaPlugin from './plugins/prisma.js';
+import * as dotenv from 'dotenv';
 
-const fastify = Fastify({ logger: true });
+// Cargar variables de entorno antes de cualquier otra cosa
+dotenv.config();
 
-// Registramos el plugin de Prisma
-fastify.register(prismaPlugin);
-
-fastify.get('/health', async () => {
-  // Verificamos si podemos contar los usuarios (prueba de conexión real)
-  const userCount = await fastify.prisma.user.count();
-  return { 
-    status: 'OK', 
-    service: 'Exclusive Host',
-    db_connected: true,
-    users_in_db: userCount
-  };
+const fastify = Fastify({
+  logger: {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'HH:MM:ss Z',
+        ignore: 'pid,hostname',
+      },
+    },
+  },
 });
 
+// --- Registro de Plugins ---
+// Registramos Prisma primero para que esté disponible en toda la app
+await fastify.register(prismaPlugin);
+
+// --- Rutas Base de Infraestructura ---
+fastify.get('/health', async (request, reply) => {
+  try {
+    // Verificamos si la base de datos responde
+    await fastify.prisma.$queryRaw`SELECT 1`;
+    return { 
+      status: 'ok', 
+      database: 'connected',
+      timestamp: new Date().toISOString() 
+    };
+  } catch (error) {
+    reply.status(500).send({ 
+      status: 'error', 
+      database: 'disconnected',
+      message: 'Fallo en la verificación de salud del motor de datos' 
+    });
+  }
+});
+
+// --- Punto de Entrada Principal ---
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000, host: '0.0.0.0' });
-    console.log('Servidor Exclusive operativo en el puerto 3000');
+    const port = Number(process.env.PORT) || 3000;
+    
+    // IMPORTANTE: host '0.0.0.0' para evitar problemas de red en Windows/Emuladores
+    await fastify.listen({ 
+      port: port, 
+      host: '0.0.0.0' 
+    });
+
+    console.log(`
+    ==================================================
+     EXCLUSIVE SERVER HOST - OPERATIVO
+    ==================================================
+    Local:        http://localhost:${port}
+    Red Privada:  http://192.168.0.4:${port} (Ejemplo)
+    Estado:       Estable (LTS Mode)
+    ==================================================
+    `);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
