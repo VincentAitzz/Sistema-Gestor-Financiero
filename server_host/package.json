@@ -1,0 +1,28 @@
+{
+  "name": "exclusive-server-host",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Nodo central de almacenamiento y sincronización para Exclusive",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "Vicente Pavez (Aitzz)",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.10.0",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.8.5",
+    "google-auth-library": "^9.6.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "prisma": "^5.10.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3"
+  }
+}

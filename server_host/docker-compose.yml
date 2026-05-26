@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Base de datos relacional PostgreSQL
+  database:
+    image: postgres:15-alpine
+    container_name: exclusive_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: dev_password_123
+      POSTGRES_DB: exclusive_finance
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Backend Fastify
+  api:
+    build: .
+    container_name: exclusive_api
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgresql://admin:dev_password_123@database:5432/exclusive_finance?schema=public
+      NODE_ENV: development
+
+volumes:
+  postgres_data:
