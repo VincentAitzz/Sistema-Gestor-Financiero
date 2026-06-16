@@ -40,4 +40,33 @@ export class AuthController {
       return reply.code(401).send({ message: 'Fallo en la autenticación con Google' });
     }
   }
+  async pairDevice(request: FastifyRequest, reply: FastifyReply) {
+    // 1. Esquema de validación para el handshake
+    const pairSchema = z.object({
+      otpCode: z.string().length(6, 'El código debe tener 6 dígitos'),
+      deviceId: z.string().min(1, 'El deviceId es requerido'),
+    });
+
+    try {
+      // 2. Validamos el input
+      const { otpCode, deviceId } = pairSchema.parse(request.body);
+
+      // 3. Llamamos al servicio (que aún debemos implementar en AuthService)
+      const { token, message } = await this.authService.validatePairing(otpCode, deviceId);
+
+      return reply.code(200).send({
+        status: 'success',
+        message,
+        token, // Este es el token JWT que el flutter guardará en SecureStorage
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return reply.code(400).send({ message: 'Datos de emparejamiento inválidos', errors: error.errors });
+      }
+
+      // Manejo de error de validación (ej: código incorrecto)
+      request.log.error(error);
+      return reply.code(401).send({ message: 'No se pudo vincular el dispositivo' });
+    }
+  }
 }

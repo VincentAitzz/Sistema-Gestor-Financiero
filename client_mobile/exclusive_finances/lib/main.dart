@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'providers/theme_provider.dart';
-import 'ui/screens/home_screen.dart';
 import 'ui/screens/main_layout.dart';
 
 void main() {

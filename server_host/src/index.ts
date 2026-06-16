@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import prismaPlugin from './shared/plugins/prisma.js';
+import setupMDns from './shared/utils/mdns.js';
 import * as dotenv from 'dotenv';
 import { authRoutes } from './modules/auth/auth.routes.js';
 import cors from '@fastify/cors';
@@ -28,6 +29,7 @@ await fastify.register(cors, {
   origin: true // Permite peticiones desde cualquier origen (emuladores/celulares)
 });
 
+
 // --- Rutas Base de Infraestructura ---
 fastify.get('/health', async (request, reply) => {
   try {
@@ -47,30 +49,25 @@ fastify.get('/health', async (request, reply) => {
   }
 });
 
+
 // --- Punto de Entrada Principal ---
 const start = async () => {
   try {
     const port = Number(process.env.PORT) || 3000;
     
-    // IMPORTANTE: host '0.0.0.0' para evitar problemas de red en Windows/Emuladores
+    // Inicia el anuncio mDNS
+    setupMDns(port); 
+    
     await fastify.listen({ 
       port: port, 
       host: '0.0.0.0' 
     });
-
-    console.log(`
-    ==================================================
-     EXCLUSIVE SERVER HOST - OPERATIVO
-    ==================================================
-    Local:        http://localhost:${port}
-    Red Privada:  http://192.168.0.4:${port} (Ejemplo)
-    Estado:       Estable (LTS Mode)
-    ==================================================
-    `);
-  } catch (err) {
+    
+    console.log(`Servidor operando en puerto ${port}`);
+  } catch (err) { // <--- AÑADE ESTO
     fastify.log.error(err);
     process.exit(1);
   }
-};
+}
 
 start();

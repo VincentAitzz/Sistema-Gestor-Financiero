@@ -9,4 +9,5 @@ export async function authRoutes(fastify: FastifyInstance) {
 
   // Definimos el endpoint de autenticación
   fastify.post('/google', (req, res) => authController.googleLogin(req, res));
+  fastify.post('/pair', (req, res) => authController.pairDevice(req, res));
 }

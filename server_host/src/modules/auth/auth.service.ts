@@ -51,4 +51,15 @@ export class AuthService {
             throw new Error('Authentication failed');
         }
     }
+    async validatePairing(otpCode: string, deviceId: string): Promise<{ token: string, message: string }> {
+  // Lógica de negocio:
+  // 1. Verificar si otpCode es '123456' (o consultar a la DB)
+  // 2. Si es válido, generar un JWT usando fastify.jwt (o tu librería de tokens)
+  // 3. Registrar el deviceId en la tabla 'Devices' mediante Prisma
+  
+  return {
+    token: "tu_nuevo_jwt_generado",
+    message: "Dispositivo autorizado exitosamente"
+  };
+}
 }
